@@ -1,8 +1,6 @@
 package com.plcoding.stockmarketapp.data.repository
 
-import com.opencsv.CSVReader
 import com.plcoding.stockmarketapp.data.csv.CSVParser
-import com.plcoding.stockmarketapp.data.csv.CompanyListingsParser
 import com.plcoding.stockmarketapp.data.local.StockDatabase
 import com.plcoding.stockmarketapp.data.mapper.toCompanyInfo
 import com.plcoding.stockmarketapp.data.mapper.toCompanyListing
@@ -17,7 +15,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
-import java.io.InputStreamReader
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,7 +32,7 @@ class StockRepositoryImpl @Inject constructor(
         fetchFromRemote: Boolean,
         query: String
     ): Flow<Resource<List<CompanyListing>>> {
-        return flow {
+        return flow<Resource<List<CompanyListing>>> {
             emit(Resource.Loading(true))
             val localListings = dao.searchCompanyListing(query)
             emit(Resource.Success(
