@@ -3,62 +3,57 @@ package com.plcoding.stockmarketapp.presentation.company_info
 import androidx.lifecycle.SavedStateHandle
 import com.google.common.truth.Truth.assertThat
 import com.plcoding.stockmarketapp.MainCoroutineRule
+import com.plcoding.stockmarketapp.data.repository.StockRepositoryFake
 import com.plcoding.stockmarketapp.domain.model.CompanyInfo
 import com.plcoding.stockmarketapp.domain.model.IntradayInfo
-import com.plcoding.stockmarketapp.domain.repository.StockRepository
-import com.plcoding.stockmarketapp.util.Resource
-import io.mockk.coEvery
-import io.mockk.every
-import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.time.LocalDateTime
-import kotlin.random.Random
 
 @ExperimentalCoroutinesApi
 class CompanyInfoViewModelTest {
 
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val coroutineRule = MainCoroutineRule()
 
     private lateinit var viewModel: CompanyInfoViewModel
-    private lateinit var repository: StockRepository
+    private lateinit var repositoryFake: StockRepositoryFake
 
     @Before
     fun setUp() {
-        repository = mockk(relaxed = true)
+        repositoryFake = StockRepositoryFake()
         viewModel = CompanyInfoViewModel(
             savedStateHandle = SavedStateHandle(
-                mapOf("symbol" to "GOOGL")
+                initialState = mapOf(
+                    "symbol" to "GOOGL"
+                )
             ),
-            repository = repository
+            repository = repositoryFake
         )
     }
 
     @Test
-    fun `Company and intraday info properly mapped to state`() = runTest {
+    fun `Company and intraday info are properly mapped to state`() {
         val companyInfo = CompanyInfo(
             symbol = "GOOGL",
-            description = "Google description",
+            description = "Google desc",
             name = "Google",
             country = "USA",
             industry = "Tech"
         )
-        coEvery { repository.getCompanyInfo("GOOGL") } returns Resource.Success(companyInfo)
+        repositoryFake.companyInfoToReturn = companyInfo
 
         val intradayInfos = listOf(
             IntradayInfo(
                 date = LocalDateTime.now(),
-                close = Random.nextDouble()
+                close = 10.0
             )
         )
-        coEvery { repository.getIntradayInfo("GOOGL") } returns Resource.Success(intradayInfos)
+        repositoryFake.intradayInfosToReturn = intradayInfos
 
-        testScheduler.advanceUntilIdle()
+        coroutineRule.dispatcher.scheduler.advanceUntilIdle()
 
         assertThat(viewModel.state.company).isEqualTo(companyInfo)
         assertThat(viewModel.state.stockInfos).isEqualTo(intradayInfos)

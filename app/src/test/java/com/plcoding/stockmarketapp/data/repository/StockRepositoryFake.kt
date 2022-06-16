@@ -1,4 +1,4 @@
-package com.plcoding.stockmarketapp
+package com.plcoding.stockmarketapp.data.repository
 
 import com.plcoding.stockmarketapp.domain.model.CompanyInfo
 import com.plcoding.stockmarketapp.domain.model.CompanyListing
@@ -11,19 +11,25 @@ import java.time.LocalDateTime
 
 class StockRepositoryFake: StockRepository {
 
-    var companyListingsToReturn = emptyList<CompanyListing>()
-    var companyInfoToReturn = CompanyInfo(
-        symbol = "test",
-        description = "test description",
-        name = "test name",
-        industry = "test industry",
-        country = "test country"
-    )
-    var intradayInfosToReturn = listOf(
+    var companyListingsToReturn = (1..10).map {
+        CompanyListing(
+            name = "name$it",
+            symbol = "symbol$it",
+            exchange = "exchange$it"
+        )
+    }
+    var intradayInfosToReturn = (1..10).map {
         IntradayInfo(
             date = LocalDateTime.now(),
-            close = 10.0
+            close = it.toDouble()
         )
+    }
+    var companyInfoToReturn = CompanyInfo(
+        symbol = "symbol",
+        description = "description",
+        name = "name",
+        country = "country",
+        industry = "industry"
     )
 
     override suspend fun getCompanyListings(
