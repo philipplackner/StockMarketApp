@@ -21,8 +21,26 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    
+                    MyScreen()
                 }
+            }
+        }
+    }
+
+    @Composable
+    fun MyScreen() {
+        Text(text = "hello")
+    }
+
+    @Preview
+    @Composable
+    fun ForPreview() {
+        StockMarketAppTheme {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colors.background
+            ) {
+                MyScreen()
             }
         }
     }
