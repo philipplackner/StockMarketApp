@@ -19,12 +19,12 @@ kotlin {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.plcoding.stockmarketapp"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -89,9 +89,6 @@ dependencies {
     // Compose Nav Destinations
     implementation 'io.github.raamcosta.compose-destinations:core:1.1.2-beta'
     ksp 'io.github.raamcosta.compose-destinations:ksp:1.1.2-beta'
-
-    // Coil
-    implementation "io.coil-kt:coil-compose:1.4.0"
 
     //Dagger - Hilt
     implementation "com.google.dagger:hilt-android:2.40.5"
